@@ -1,0 +1,18 @@
+highlight
+
+place block
+- place adjacent to highlighted block
+place multiple
+- palce adjacent to highlighted block and onwards
+
+
+delete block
+- delete highlighted block
+
+delete multiple
+- delete highlighted block onwards
+
+
+left click to add blocks
+right click to delete
+hover to highlight
