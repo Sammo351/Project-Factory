@@ -1,6 +1,11 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: cdc912398310004479e5c10e2fc2c8f3
 timeCreated: 1484048155
+=======
+guid: e06dbd6f0570d4f418f8c4762e728db6
+timeCreated: 1484050212
+>>>>>>> 2bedb4cf6ee1ff180d436d8d7d5032f05554e6ca
 licenseType: Free
 TextScriptImporter:
   userData: 
