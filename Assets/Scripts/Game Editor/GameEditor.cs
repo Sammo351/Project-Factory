@@ -153,8 +153,6 @@ public class GameEditor : MonoBehaviour {
             {
                 deci -= 1;
             }
-
-
         }
         int final = (int)(integer + deci);
         return final * multi;
