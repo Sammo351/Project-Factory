@@ -7,7 +7,10 @@ public class GameEditor : MonoBehaviour {
     public Color placeColor = Color.green;
     public Color removeColor = Color.red;
     public Color highlightColor = Color.white;
+    public Color conflictColor = Color.yellow;
     public Texture placeholder;
+    public GameObject selectedBlock;
+    public bool showHighlighter = true;
     public bool drawInScene = true;
     private bool _leftMouseDown = false;
     private bool _rightMouseDown = false;
@@ -55,6 +58,10 @@ public class GameEditor : MonoBehaviour {
         {
             OnClickHold(1);
         }
+        else if (showHighlighter)
+        {
+            OnHover();
+        }
     }
     void OnClick(int button =0)
     {
@@ -81,10 +88,23 @@ public class GameEditor : MonoBehaviour {
     void OnClickHold(int button = 0)
     {
         Vector3? coords = GetClickPosition(button);
-        if(coords != null)
+        if (coords != null)
         {
             Color col = button == 0 ? placeColor : removeColor;
+
             Drawer.DrawCube((Vector3)coords, col);
+        }
+    }
+    void OnHover()
+    {
+        Vector3? coords = GetClickPosition(0);
+        if (coords != null)
+        {
+            bool canPlace = GameEditorHelper.CanBlockBePlaced(selectedBlock, (Vector3)coords);
+           //print(canPlace);
+            Color col = canPlace ? highlightColor : conflictColor;
+            
+            Drawer.DrawBlock(selectedBlock,(Vector3)coords, col);
         }
     }
     bool isMouseDown(int button)
@@ -103,59 +123,16 @@ public class GameEditor : MonoBehaviour {
         if(Physics.Raycast(ray, out hit, Mathf.Infinity, layer.value))
         {
           
-            Vector3 coords = hit.point;
-            print("before: " +coords);
-            RoundVector(ref coords, hit.normal);
-            print("after rounding: " + coords);
+            Vector3 coords = hit.collider.transform.position;
+            GameEditorHelper.RoundVector(ref coords);
             if (button==0)
             {
                 coords += hit.normal; 
             }
-            print("final: " + coords);
-
             return coords;
         }
         return null;
     }
-    void RoundVector(ref Vector3 vec, Vector3 normal)
-    {
-        int x = Round(vec.x, normal, 0);
-        int y = Round(vec.y, normal, 1);
-        int z = Round(vec.z, normal, 2);
-        vec = new Vector3(x, y, z);
-    }
-    Vector3 RoundVector( Vector3 vec, Vector3 normal)
-    {
-        Vector3 v = new Vector3();
-        RoundVector(ref v, normal);
-        return v;
-    }
-    /*
-    math rounding goes to the next even
-    rounding alos depends on which axis the normal is on
-    Correct position:
-    z+, y-, x-
-    Incorrect position(reduce by 1 when rounding):
-    z-, y+, x+
-    */
-    int Round(float x, Vector3 normal, int axis) 
-    {
-        //x= -5.5
-        int multi = x >= 0 ? 1 : -1;
-        float absX = Mathf.Abs(x); // 5.5
-        int integer = (int)(absX / 1); // 5
-        float deci = absX - integer; // 5.5 - 5 = 0.5
-        if(deci >=0.5f)
-        {
-            deci = 1;
-            //if incorrect axis , deci=-1
-            if((axis==0 && normal.x >0) || (axis == 1 && normal.y > 0) || (axis == 2 && normal.z < 0))
-            {
-                deci -= 1;
-            }
-        }
-        int final = (int)(integer + deci);
-        return final * multi;
-    }
+  
     
 }
