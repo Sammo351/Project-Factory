@@ -1,0 +1,3 @@
+Structure SnapPoint 
+	- the block used as the origin when placing in the world
+	- defaults to bottom left
